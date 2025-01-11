@@ -12,4 +12,3 @@ namespace ECommerce.Application.Features.Auth
         public string Username { get; set; } = null!;
     }
 }
-

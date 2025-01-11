@@ -13,3 +13,4 @@ namespace ECommerce.Application.Features.Auth
         public string Password { get; set; } = null!;
     }
 }
+
