@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Features\" />
-    <Folder Include="Interfaces\" />
   </ItemGroup>
 
   <ItemGroup>
