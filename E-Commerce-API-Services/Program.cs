@@ -1,15 +1,23 @@
+using ECommerce.Persistence.DataContext;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1) Register your DbContext here
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // or any other DB provider
+});
 
+// 2) Add controllers, swagger, etc.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 3) Middlewares
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,9 +25,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
