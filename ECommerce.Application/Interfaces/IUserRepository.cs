@@ -14,3 +14,5 @@ namespace ECommerce.Application.Interfaces
         Task AddUserAsync(User user);
     }
 }
+
+

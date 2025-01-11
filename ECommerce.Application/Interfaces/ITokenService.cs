@@ -12,3 +12,4 @@ namespace ECommerce.Application.Interfaces
         string GenerateToken(User user);
     }
 }
+
