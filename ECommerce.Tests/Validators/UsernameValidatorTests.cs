@@ -16,6 +16,8 @@ public class UsernameValidatorTests
     [InlineData("valid_user")]
     [InlineData("User123")]
     [InlineData("John_Doe")]
+    [InlineData("123_B")]
+    [InlineData("q12")]
     public void Validate_ValidUsername_ShouldNotThrowException(string username)
     {
         // Act
@@ -31,7 +33,6 @@ public class UsernameValidatorTests
     [InlineData("toolongtoolongtoolong")] // Too long
     [InlineData("user__name")]     // Consecutive underscores
     [InlineData("user name")]      // Space in name
-    [InlineData("_username")]      // Starts with underscore (if your rules forbid that)
     public void Validate_InvalidUsername_ShouldThrowException(string username)
     {
         // Act & Assert

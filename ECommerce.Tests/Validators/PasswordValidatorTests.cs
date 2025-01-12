@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
-using ECommerce.Infrastructure.Security; // adjust if your validator is in a different namespace
+using ECommerce.Infrastructure.Security;
+using System.Runtime.InteropServices; // adjust if your validator is in a different namespace
 
 namespace ECommerce.Tests.Validators;
 public class PasswordValidatorTests
@@ -25,14 +26,16 @@ public class PasswordValidatorTests
     }
 
     [Theory]
-    [InlineData("abc")]           // Too short
-    [InlineData("abcdefgh")]      // Missing digit, uppercase, special char
-    [InlineData("Abc1234")]       // Missing special character
-    [InlineData("Abc12345 ")]     // Contains whitespace
-    [InlineData("ABC@1234")]      // Missing lowercase
-    [InlineData("aaaaaaaa@1")]    // Repetitive characters (if your rules forbid that)
-    [InlineData("Abc@12")]        // Too short again
-    [InlineData("Abc@1234abc")]   // Might contain sequential characters if your rules forbid
+    [InlineData("")] //empty password
+    [InlineData("A1!")] // short password <3
+    [InlineData("Abcdefgklmsd12dsdja223@")] //long password >20
+    [InlineData("Hhoommeeww!")] // missing a digit
+    [InlineData("hhoommee11!!")] // missing uppercase
+    [InlineData("HHOOMMEE11!!")] // missing lowercase
+    [InlineData("HHoommee112")] // missing specail charachter
+    [InlineData("HHoommee11 !!")] // whitespace
+    [InlineData("HHHHoommee11!!")] // repetitive characters
+
     public void Validate_InvalidPassword_ShouldThrowException(string password)
     {
         // Act & Assert

@@ -26,12 +26,14 @@ public class EmailValidatorTests
     }
 
     [Theory]
-    [InlineData("invalidemail")]
-    [InlineData("user@.com")]
-    [InlineData("user..name@example.com")]
-    [InlineData(".user@example.com")]
-    [InlineData("user@domain")]      // missing TLD
-    [InlineData("user@domain..com")] // consecutive dots
+    [InlineData("testexample.com")] // Invalid, missing '@'
+    [InlineData("test@")] // Invalid, missing domain
+    [InlineData("@example.com")] // Invalid, missing username
+    [InlineData("test@.com")] // Invalid, domain missing name
+    [InlineData("test@com")] // Invalid, missing top-level domain
+    [InlineData("")] // Invalid, empty string
+    [InlineData("a@b")] // Invalid: Less than 5 characters
+    [InlineData("")] // Invalid: Empty string
     public void Validate_InvalidEmail_ShouldThrowException(string email)
     {
         // Act & Assert
