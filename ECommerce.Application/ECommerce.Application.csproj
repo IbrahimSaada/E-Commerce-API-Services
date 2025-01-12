@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Core\" />
+    <ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
+    <Folder Include="Core\" />
   </ItemGroup>
 
 </Project>
