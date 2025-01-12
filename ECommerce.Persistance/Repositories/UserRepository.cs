@@ -23,7 +23,7 @@ namespace ECommerce.Persistence.Repositories
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
-                .FirstAsync(u => u.Username == username);
+                .FirstOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task AddUserAsync(User user)
