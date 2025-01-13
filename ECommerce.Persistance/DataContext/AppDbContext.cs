@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ECommerce.Domain.Entities;
+using RelationshipOrderItem = ECommerce.Domain.Relationships.OrderItem;
 
 namespace ECommerce.Persistence.DataContext
 {
@@ -9,13 +10,13 @@ namespace ECommerce.Persistence.DataContext
         {
         }
 
-        // DbSets
+        // DbSet for Entities
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<RelationshipOrderItem> OrderItems { get; set; } // Use alias for OrderItem
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -23,23 +24,8 @@ namespace ECommerce.Persistence.DataContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Optional: Fluent configuration, e.g., OnDelete behaviors
-            // Example: on delete set null for Category in Product
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            // Example: On delete cascade for orders → user
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.User)
-                .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Similarly for other relationships, if desired.
-
+            // Automatically apply all configurations from the current assembly
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
     }
