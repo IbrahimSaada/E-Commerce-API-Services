@@ -1,12 +1,15 @@
 ﻿using System.Text.RegularExpressions;
+using ECommerce.Application.Features.Auth;
 using ECommerce.Application.Interfaces;
 
 namespace ECommerce.Infrastructure.Security
 {
-    public class EmailValidator : IEmailValidator
+    public class EmailValidator : IValidator<RegisterRequest>
     {
-        public void Validate(string email)
+        public void Validate(RegisterRequest request)
         {
+            var email = request.Email;
+
             if (string.IsNullOrWhiteSpace(email))
             {
                 throw new Exception("Email cannot be empty or whitespace only.");
@@ -31,7 +34,9 @@ namespace ECommerce.Infrastructure.Security
             }
 
             // Ensure the email does not start or end with a special character
-            if (email.StartsWith(".") || email.EndsWith(".") || email.StartsWith("-") || email.EndsWith("-") || email.StartsWith("_") || email.EndsWith("_"))
+            if (email.StartsWith(".") || email.EndsWith(".") ||
+                email.StartsWith("-") || email.EndsWith("-") ||
+                email.StartsWith("_") || email.EndsWith("_"))
             {
                 throw new Exception("Email cannot start or end with a special character (., -, _).");
             }

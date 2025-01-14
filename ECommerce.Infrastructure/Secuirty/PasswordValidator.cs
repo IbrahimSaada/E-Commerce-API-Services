@@ -1,12 +1,15 @@
 ﻿using System.Text.RegularExpressions;
+using ECommerce.Application.Features.Auth;
 using ECommerce.Application.Interfaces;
 
 namespace ECommerce.Infrastructure.Security
 {
-    public class PasswordValidator : IPasswordValidator
+    public class PasswordValidator : IValidator<RegisterRequest>
     {
-        public void Validate(string password)
+        public void Validate(RegisterRequest request)
         {
+            var password = request.Password;
+
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new Exception("Password cannot be empty.");

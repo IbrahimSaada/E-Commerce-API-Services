@@ -1,12 +1,15 @@
 ﻿using System.Text.RegularExpressions;
+using ECommerce.Application.Features.Auth;
 using ECommerce.Application.Interfaces;
 
 namespace ECommerce.Infrastructure.Security
 {
-    public class UsernameValidator : IUsernameValidator
+    public class UsernameValidator : IValidator<RegisterRequest>
     {
-        public void Validate(string username)
+        public void Validate(RegisterRequest request)
         {
+            var username = request.Username;
+
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new Exception("Username cannot be empty or whitespace only.");

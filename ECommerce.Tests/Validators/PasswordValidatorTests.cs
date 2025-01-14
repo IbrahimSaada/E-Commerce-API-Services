@@ -1,44 +1,57 @@
 ﻿using System;
 using Xunit;
 using ECommerce.Infrastructure.Security;
-using System.Runtime.InteropServices; // adjust if your validator is in a different namespace
+using ECommerce.Application.Features.Auth;
 
-namespace ECommerce.Tests.Validators;
-public class PasswordValidatorTests
+namespace ECommerce.Tests.Validators
 {
-    private readonly PasswordValidator _passwordValidator;
-
-    public PasswordValidatorTests()
+    public class PasswordValidatorTests
     {
-        _passwordValidator = new PasswordValidator();
-    }
+        private readonly PasswordValidator _passwordValidator;
 
-    [Theory]
-    [InlineData("Abc@1234")]       // valid example
-    [InlineData("StrongP@ssw0rd")] // valid example
-    public void Validate_ValidPassword_ShouldNotThrowException(string password)
-    {
-        // Act
-        var exception = Record.Exception(() => _passwordValidator.Validate(password));
+        public PasswordValidatorTests()
+        {
+            _passwordValidator = new PasswordValidator();
+        }
 
-        // Assert
-        Assert.Null(exception);
-    }
+        [Theory]
+        [InlineData("Abc@1234")]       // Valid example
+        [InlineData("StrongP@ssw0rd")] // Valid example
+        public void Validate_ValidPassword_ShouldNotThrowException(string password)
+        {
+            // Arrange
+            var request = new RegisterRequest
+            {
+                Password = password
+            };
 
-    [Theory]
-    [InlineData("")] //empty password
-    [InlineData("A1!")] // short password <3
-    [InlineData("Abcdefgklmsd12dsdja223@")] //long password >20
-    [InlineData("Hhoommeeww!")] // missing a digit
-    [InlineData("hhoommee11!!")] // missing uppercase
-    [InlineData("HHOOMMEE11!!")] // missing lowercase
-    [InlineData("HHoommee112")] // missing specail charachter
-    [InlineData("HHoommee11 !!")] // whitespace
-    [InlineData("HHHHoommee11!!")] // repetitive characters
+            // Act
+            var exception = Record.Exception(() => _passwordValidator.Validate(request));
 
-    public void Validate_InvalidPassword_ShouldThrowException(string password)
-    {
-        // Act & Assert
-        Assert.Throws<Exception>(() => _passwordValidator.Validate(password));
+            // Assert
+            Assert.Null(exception);
+        }
+
+        [Theory]
+        [InlineData("")] // Empty password
+        [InlineData("A1!")] // Short password <8
+        [InlineData("Abcdefgklmsd12dsdja223@")] // Long password >20
+        [InlineData("Hhoommeeww!")] // Missing a digit
+        [InlineData("hhoommee11!!")] // Missing uppercase
+        [InlineData("HHOOMMEE11!!")] // Missing lowercase
+        [InlineData("HHoommee112")] // Missing special character
+        [InlineData("HHoommee11 !!")] // Whitespace
+        [InlineData("HHHHoommee11!!")] // Repetitive characters
+        public void Validate_InvalidPassword_ShouldThrowException(string password)
+        {
+            // Arrange
+            var request = new RegisterRequest
+            {
+                Password = password
+            };
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => _passwordValidator.Validate(request));
+        }
     }
 }

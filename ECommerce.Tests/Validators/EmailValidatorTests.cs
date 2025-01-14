@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
-using ECommerce.Infrastructure.Security; // adjust if your validator is in a different namespace
+using ECommerce.Infrastructure.Security;
+using ECommerce.Application.Features.Auth;
 
 namespace ECommerce.Tests.Validators;
 public class EmailValidatorTests
@@ -18,8 +19,13 @@ public class EmailValidatorTests
     [InlineData("my.email@domain.org")]
     public void Validate_ValidEmail_ShouldNotThrowException(string email)
     {
+
+        var request = new RegisterRequest
+        { 
+            Email = email,
+        };
         // Act
-        var exception = Record.Exception(() => _emailValidator.Validate(email));
+        var exception = Record.Exception(() => _emailValidator.Validate(request));
 
         // Assert
         Assert.Null(exception); // No exception thrown, so valid
@@ -36,7 +42,11 @@ public class EmailValidatorTests
     [InlineData("")] // Invalid: Empty string
     public void Validate_InvalidEmail_ShouldThrowException(string email)
     {
+        var request = new RegisterRequest
+        {
+            Email = email
+        };
         // Act & Assert
-        Assert.Throws<Exception>(() => _emailValidator.Validate(email));
+        Assert.Throws<Exception>(() => _emailValidator.Validate(request));
     }
 }

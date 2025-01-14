@@ -35,13 +35,7 @@ builder.Services.AddScoped<LoginHandler>();
 
 builder.Services.AddScoped<RegisterHandler>();
 
-builder.Services.AddScoped<IPasswordValidator, PasswordValidator>();
-
-builder.Services.AddScoped<IUsernameValidator, UsernameValidator>();
-
-builder.Services.AddScoped<IEmailValidator, EmailValidator>();
-
-
+builder.Services.AddScoped<IValidator<RegisterRequest>, PasswordValidator>();
 
 // 5. Configure JWT authentication
 builder.Services.AddAuthentication(options =>
