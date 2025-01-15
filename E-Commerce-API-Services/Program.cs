@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using ECommerce.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,13 @@ builder.Services.AddScoped<IValidator<RegisterRequest>, UsernameValidator>();
 builder.Services.AddScoped<IValidator<RegisterRequest>, FullNameValidator>();
 
 builder.Services.AddScoped<IValidator<RegisterRequest>, DateOfBirthValidator>();
+
+builder.Services.AddScoped<SendVerificationEmailHandler>();
+
+builder.Services.AddScoped<VerifyEmailHandler>();
+
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
 
 // 5. Configure JWT authentication
 builder.Services.AddAuthentication(options =>
