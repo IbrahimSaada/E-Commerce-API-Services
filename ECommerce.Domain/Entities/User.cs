@@ -10,6 +10,7 @@
         public DateTime DateOfBirth { get; set; }
         public bool IsEmailVerified { get; set; } = false;
         public string? EmailVerificationToken { get; set; }
+        public DateTime? EmailVerificationTokenExpires { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
