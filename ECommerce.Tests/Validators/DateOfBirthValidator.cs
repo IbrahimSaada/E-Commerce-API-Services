@@ -37,17 +37,27 @@ namespace ECommerce.Tests.Validators
         [InlineData("2025-01-01")] // Future date
         [InlineData("")]           // Empty date
         [InlineData("2010-01-01")] // User is under 18 years old
-        [InlineData("2010")]
+        [InlineData("2010")]       // Invalid format (not a full date)
         public void Validate_InvalidDateOfBirth_ShouldThrowException(string dateOfBirth)
         {
             // Arrange
             var request = new RegisterRequest
             {
-                DateOfBirth = string.IsNullOrEmpty(dateOfBirth) ? default : DateTime.Parse(dateOfBirth)
+                DateOfBirth = IsValidDate(dateOfBirth) ? DateTime.Parse(dateOfBirth) : default
             };
 
             // Act & Assert
             Assert.Throws<Exception>(() => _dateOfBirthValidator.Validate(request));
+        }
+
+        private bool IsValidDate(string date)
+        {
+            return DateTime.TryParseExact(
+                date,
+                "yyyy-MM-dd", // Ensure the date is in the proper format
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out _);
         }
     }
 }

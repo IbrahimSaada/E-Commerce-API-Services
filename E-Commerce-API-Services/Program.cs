@@ -37,6 +37,14 @@ builder.Services.AddScoped<RegisterHandler>();
 
 builder.Services.AddScoped<IValidator<RegisterRequest>, PasswordValidator>();
 
+builder.Services.AddScoped<IValidator<RegisterRequest>, EmailValidator>();
+
+builder.Services.AddScoped<IValidator<RegisterRequest>, UsernameValidator>();
+
+builder.Services.AddScoped<IValidator<RegisterRequest>, FullNameValidator>();
+
+builder.Services.AddScoped<IValidator<RegisterRequest>, DateOfBirthValidator>();
+
 // 5. Configure JWT authentication
 builder.Services.AddAuthentication(options =>
 {

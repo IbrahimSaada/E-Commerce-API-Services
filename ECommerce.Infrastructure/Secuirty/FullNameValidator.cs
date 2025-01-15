@@ -11,9 +11,9 @@ public class FullNameValidator : IValidator<RegisterRequest>
             throw new Exception("Full Name is required.");
         }
 
-        if (request.FullName.Length < 2 || request.FullName.Length > 100)
+        if (request.FullName.Length < 2 || request.FullName.Length > 30)
         {
-            throw new Exception("Full Name must be between 2 and 100 characters.");
+            throw new Exception("Full Name must be between 2 and 30 characters.");
         }
 
         if (!Regex.IsMatch(request.FullName, @"^[a-zA-Z\s]+$"))
