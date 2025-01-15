@@ -11,7 +11,10 @@ namespace ECommerce.Application.Interfaces
     {
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserByUsernameAsync(string username);
+        Task<User?> GetByIdAsync(long userId);
+        Task<User?> GetByVerificationTokenAsync(string token);
         Task AddUserAsync(User user);
+        Task UpdateAsync(User user);
     }
 }
 
