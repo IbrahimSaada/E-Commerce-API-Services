@@ -12,48 +12,34 @@ using ECommerce.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Register your DbContext here
+// 1) Configure Database Context
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-    // or any other DB provider
 });
 
-// 2) Add controllers, swagger, etc.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// 2. Register Repositories (from Persistence)
+// 2) Configure Services and Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// 3. Register Infrastructure services (password hasher, token service)
+// Register Infrastructure Services
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
-// 4. Register your Application use-case handler (LoginHandler)
-builder.Services.AddScoped<LoginHandler>();
-
-builder.Services.AddScoped<RegisterHandler>();
-
-builder.Services.AddScoped<IValidator<RegisterRequest>, PasswordValidator>();
-
-builder.Services.AddScoped<IValidator<RegisterRequest>, EmailValidator>();
-
-builder.Services.AddScoped<IValidator<RegisterRequest>, UsernameValidator>();
-
-builder.Services.AddScoped<IValidator<RegisterRequest>, FullNameValidator>();
-
-builder.Services.AddScoped<IValidator<RegisterRequest>, DateOfBirthValidator>();
-
-builder.Services.AddScoped<SendVerificationEmailHandler>();
-
-builder.Services.AddScoped<VerifyEmailHandler>();
-
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
+// Register Application Handlers
+builder.Services.AddScoped<LoginHandler>();
+builder.Services.AddScoped<RegisterHandler>();
+builder.Services.AddScoped<SendVerificationEmailHandler>();
+builder.Services.AddScoped<VerifyEmailHandler>();
 
-// 5. Configure JWT authentication
+// Register Validators
+builder.Services.AddScoped<IValidator<RegisterRequest>, PasswordValidator>();
+builder.Services.AddScoped<IValidator<RegisterRequest>, EmailValidator>();
+builder.Services.AddScoped<IValidator<RegisterRequest>, UsernameValidator>();
+builder.Services.AddScoped<IValidator<RegisterRequest>, FullNameValidator>();
+builder.Services.AddScoped<IValidator<RegisterRequest>, DateOfBirthValidator>();
+
+// 3) Configure Authentication and JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,13 +62,25 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add controllers
-builder.Services.AddControllers();
+// 4) Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()  // Allows all origins. Adjust as needed.
+              .AllowAnyMethod()  // Allows all HTTP methods (GET, POST, OPTIONS, etc.).
+              .AllowAnyHeader(); // Allows all headers.
+    });
+});
 
+// 5) Add Controllers and Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 3) Middlewares
+// Middlewares
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -90,7 +88,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
+
+// Enable CORS
+app.UseCors();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();
-

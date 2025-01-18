@@ -31,6 +31,10 @@ namespace ECommerce.Application.Features.Auth
             if (!isValid)
                 throw new Exception("Invalid credentials");
 
+            if (!user.IsEmailVerified)
+            {
+                throw new Exception("Your email is not verified. Please verify your email to log in.");
+            }
             // 3. Generate token
             var token = _tokenService.GenerateToken(user);
 
